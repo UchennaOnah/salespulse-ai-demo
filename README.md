@@ -1,51 +1,34 @@
-# SalesPulse AI — Sales Analytics and Forecasting Demo
+# SalesPulse AI 2.0
 
-A Streamlit demo with interactive KPI reporting, category/region breakdowns, CSV upload, Random Forest short-term forecasting, holdout evaluation and downloadable reports.
+A polished Streamlit sales analytics demonstration with synthetic data, interactive filters, category and regional breakdowns, deterministic business insights, and a Random Forest short-term revenue forecast.
 
-## Run locally
+## Quick start (Windows PowerShell)
 
-1. Install Python 3.10 or newer and open this folder in VS Code.
-2. Create a virtual environment:
-   - Windows PowerShell: `py -m venv .venv` then `.\.venv\Scripts\Activate.ps1`
-   - macOS/Linux: `python3 -m venv .venv` then `source .venv/bin/activate`
-3. Run `python -m pip install -r requirements.txt`.
-4. Run `python -m streamlit run app.py`.
-5. Open the local address printed in the terminal (usually http://localhost:8501).
+```powershell
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
 
-## Deploy using Streamlit Community Cloud
+Activation is optional. Open http://localhost:8501 after Streamlit starts.
 
-1. Create a new GitHub repository, such as `salespulse-ai-demo`.
-2. Upload `app.py`, `requirements.txt`, `sample_sales.csv`, `.gitignore` and this README to the repository root. Do **not** upload real client data or secrets.
-3. Sign in to https://share.streamlit.io/ and select **Create app** (the interface may change).
-4. Choose your GitHub repository, branch and `app.py` as the entrypoint.
-5. Deploy and test the public app link using the sample dataset.
-6. If deployment fails, open the app logs and check dependency installation and paths.
+## Deploy to your existing Streamlit app
 
-## Input CSV schema
+1. Back up your current GitHub `salespulse-ai-demo` repository or create a new branch.
+2. Upload **the contents** of this folder to the repository root, replacing `app.py`, `requirements.txt`, `README.md` and `sample_sales.csv`. Include the `assets/logo.svg` file in an `assets` directory. Do not upload `.venv`, `.env` or secrets.
+3. Commit the changes to the branch configured in Streamlit Community Cloud. The existing app should redeploy automatically; check its build logs if it does not.
+4. Keep the entrypoint set to `app.py`.
 
-Required columns: `order_id,date,product,category,region,quantity,unit_price`.
+## Expected CSV format
 
-- `date`: ISO date `YYYY-MM-DD` preferred.
-- `quantity`: positive number.
-- `unit_price`: nonnegative GBP amount, without currency symbol.
-- Each row represents an order line; the same `order_id` can appear on multiple lines.
-- `revenue` is calculated as `quantity * unit_price`; discounts, returns, VAT and shipping are not modelled.
-- Forecasting requires at least 45 calendar days in the filtered date range.
+`order_id,date,product,category,region,quantity,unit_price`
 
-## Model and limitations
+Dates should be parseable; quantity positive and unit_price nonnegative. One order can have multiple product lines.
 
-A RandomForestRegressor learns calendar features (elapsed days, weekday, month, weekend). Data is aggregated to daily revenue with zero-filled missing dates. The most recent ~20% of dates are held out for evaluation. The model is refitted on the full series to produce a 7–30 day forecast. The app displays mean absolute error (MAE) and a basic seven-day-mean baseline error; it warns when the ML model is worse.
+## Forecasting limitations
 
-This is a demonstration, **not** a validated production forecasting service. It cannot model promotions, returns, changing stock, holidays, or causal drivers. Random forests may be poor at extrapolating long-term trends. Never claim forecasts are certain or that the app is GDPR-compliant by default.
+The Random Forest uses calendar features, a chronological holdout and a simple 7-day-mean baseline. It is a demonstration model, not a validated commercial demand forecast. It does not model holidays, promotions, stockouts or exogenous variables. It may not outperform the baseline; the app reports this explicitly. Only use authorised, non-sensitive data in the public demo.
 
-## Demo script (3 minutes)
+## Branding
 
-1. Show that the sample data is synthetic.
-2. Filter by region and category; point out live KPI updates.
-3. Open the business breakdown tab and identify the strongest category.
-4. Show the forecast, holdout MAE and simple baseline comparison; explain limitations.
-5. Download a summary CSV and ask the prospect how they currently prepare this report.
-
-## Before working with real clients
-
-Agree scope, ownership, hosting, access control, data protection responsibilities and maintenance. Streamlit Community Cloud public demo apps are not a suitable default for confidential client data. Use a private, secured deployment and authorised data-processing arrangements where required.
+The editable vector logo is `assets/logo.svg`. The `assets/design_preview.png` is an illustrative visual concept, not a screenshot of the running application.
